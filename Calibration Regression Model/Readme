@@ -1,1 +1,3 @@
 They are the subject-dependent regression model for the calibration models.
+
+'.pickle' files are the sklearn model trained for each subject. They can be loaded for furthern used.
