@@ -178,19 +178,19 @@ def mfcc_feature(data, para_dict):
         print('mfcc_feature Error, sr is a required parameter')
         return -1
     if 'n_mfcc' in para_dict.keys():
-        sr = para_dict['n_mfcc']
+        n_mfcc = para_dict['n_mfcc']
     if 'lifter' in para_dict.keys():
-        sr = para_dict['lifter']
+        lifter = para_dict['lifter']
     if 'n_fft' in para_dict.keys():
-        sr = para_dict['n_fft']
+        n_fft = para_dict['n_fft']
     if 'hop_length' in para_dict.keys():
-        sr = para_dict['hop_length']
+        hop_length = para_dict['hop_length']
     if 'fmin' in para_dict.keys():
-        sr = para_dict['fmin']
+        fmin = para_dict['fmin']
     if 'fmax' in para_dict.keys():
-        sr = para_dict['fmax']
+        fmax = para_dict['fmax']
     if 'pre_em' in para_dict.keys():
-        sr = para_dict['pre_em']
+        pre_em = para_dict['pre_em']
     
     x = librosa.feature.mfcc(y=data[0, 1:] - pre_em * data[0, :-1], \
                                      sr=sr, n_mfcc=n_mfcc, lifter=lifter, n_fft=n_fft, hop_length=hop_length, fmin=fmin, fmax=fmax)
@@ -221,22 +221,22 @@ def mfcc_feature_mean_std(data, para_dict):
     if 'sr' in para_dict.keys():
         sr = para_dict['sr']
     else:
-        print('mfcc_feature_mean_std Error, sr is a required parameter')
+        print('mfcc_feature Error, sr is a required parameter')
         return -1
     if 'n_mfcc' in para_dict.keys():
-        sr = para_dict['n_mfcc']
+        n_mfcc = para_dict['n_mfcc']
     if 'lifter' in para_dict.keys():
-        sr = para_dict['lifter']
+        lifter = para_dict['lifter']
     if 'n_fft' in para_dict.keys():
-        sr = para_dict['n_fft']
+        n_fft = para_dict['n_fft']
     if 'hop_length' in para_dict.keys():
-        sr = para_dict['hop_length']
+        hop_length = para_dict['hop_length']
     if 'fmin' in para_dict.keys():
-        sr = para_dict['fmin']
+        fmin = para_dict['fmin']
     if 'fmax' in para_dict.keys():
-        sr = para_dict['fmax']
+        fmax = para_dict['fmax']
     if 'pre_em' in para_dict.keys():
-        sr = para_dict['pre_em']
+        pre_em = para_dict['pre_em']
         
     x = librosa.feature.mfcc(y=data[0, 1:] - pre_em * data[0, :-1], \
                                      sr=sr, n_mfcc=n_mfcc, lifter=lifter, n_fft=n_fft, hop_length=hop_length, fmin=fmin, fmax=fmax)
