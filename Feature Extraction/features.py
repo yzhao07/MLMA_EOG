@@ -159,17 +159,38 @@ def cc(data):
 
 #%% ----------MFCC features----------
 # MFCC
-def mfcc_feature(data,
-                 sr,
-                 n_mfcc = 10,
-                 lifter = 12,
-                 n_fft = 500,
-                 hop_length = 250,
-                 fmin = 10,
-                 fmax = 100,
-                 pre_em = 0.45):
+def mfcc_feature(data, para_dict):
     # input: (times, channels)
     # output: (channels, (frequency components * time components))
+    
+    sr = -1
+    n_mfcc = 10,
+    lifter = 12,
+    n_fft = 500,
+    hop_length = 250,
+    fmin = 10,
+    fmax = 100
+    pre_em = 0.45
+    
+    if 'sr' in para_dict.keys():
+        sr = para_dict['sr']
+    else:
+        print('mfcc_feature Error, sr is a required parameter')
+        return -1
+    if 'n_mfcc' in para_dict.keys():
+        sr = para_dict['n_mfcc']
+    if 'lifter' in para_dict.keys():
+        sr = para_dict['lifter']
+    if 'n_fft' in para_dict.keys():
+        sr = para_dict['n_fft']
+    if 'hop_length' in para_dict.keys():
+        sr = para_dict['hop_length']
+    if 'fmin' in para_dict.keys():
+        sr = para_dict['fmin']
+    if 'fmax' in para_dict.keys():
+        sr = para_dict['fmax']
+    if 'pre_em' in para_dict.keys():
+        sr = para_dict['pre_em']
     
     x = librosa.feature.mfcc(y=data[0, 1:] - pre_em * data[0, :-1], \
                                      sr=sr, n_mfcc=n_mfcc, lifter=lifter, n_fft=n_fft, hop_length=hop_length, fmin=fmin, fmax=fmax)
@@ -185,17 +206,38 @@ def mfcc_feature(data,
     return mfcc
 
 # Mean and standard diviation of each frequency components in MFCC
-def mfcc_feature_mean_std(data,
-                 sr,
-                 n_mfcc = 10,
-                 lifter = 12,
-                 n_fft = 500,
-                 hop_length = 250,
-                 fmin = 10,
-                 fmax = 100):
+def mfcc_feature_mean_std(data, para_dict):
     # input: (times, channels)
     # output: (channels, (frequency components * 2))
+    sr = -1
+    n_mfcc = 10,
+    lifter = 12,
+    n_fft = 500,
+    hop_length = 250,
+    fmin = 10,
+    fmax = 100
     pre_em = 0.45
+    
+    if 'sr' in para_dict.keys():
+        sr = para_dict['sr']
+    else:
+        print('mfcc_feature_mean_std Error, sr is a required parameter')
+        return -1
+    if 'n_mfcc' in para_dict.keys():
+        sr = para_dict['n_mfcc']
+    if 'lifter' in para_dict.keys():
+        sr = para_dict['lifter']
+    if 'n_fft' in para_dict.keys():
+        sr = para_dict['n_fft']
+    if 'hop_length' in para_dict.keys():
+        sr = para_dict['hop_length']
+    if 'fmin' in para_dict.keys():
+        sr = para_dict['fmin']
+    if 'fmax' in para_dict.keys():
+        sr = para_dict['fmax']
+    if 'pre_em' in para_dict.keys():
+        sr = para_dict['pre_em']
+        
     x = librosa.feature.mfcc(y=data[0, 1:] - pre_em * data[0, :-1], \
                                      sr=sr, n_mfcc=n_mfcc, lifter=lifter, n_fft=n_fft, hop_length=hop_length, fmin=fmin, fmax=fmax)
     
