@@ -1,0 +1,1 @@
+'features.py' includes a group of functions that can extract EMG feature and a function that can reutrn the EMG features array for give function names.
