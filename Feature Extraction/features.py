@@ -21,7 +21,7 @@ def EMG_features(data, segments_num, function_list=[]):
     # segment signal
     segments_num = int(segments_num)
     channel_num = data.shape[1]
-    k = np.floor(data.shape[0], segments_num) # segment length
+    k = int(np.floor(data.shape[0]/segments_num)) # segment length
     data_seg = np.zeros((0, k))
     for i in range(data.shape[1]):
         data_seg = np.append(data_seg, data[:(k*segments_num), i].reshape((segments_num, k)), axis=0)
@@ -30,11 +30,14 @@ def EMG_features(data, segments_num, function_list=[]):
     # calculate features of each segment
     features = np.zeros((data_seg.shape[1], 0))
     for function_idx in range(len(function_list)):
+        print("function {}".format(function_idx))
         if len(function_list[function_idx]) == 1:
             x = function_list[function_idx][0](data_seg)
+            #print(x.shape)
             features = np.append(features, x, axis=1)
         elif len(function_list[function_idx]) == 2:
             x = function_list[function_idx][0](data_seg, function_list[function_idx][1])
+            #print(x.shape)
             features = np.append(features, x, axis=1)
     
     features_return = np.zeros((channel_num, segments_num, features.shape[1]))
@@ -51,7 +54,7 @@ def EMG_features(data, segments_num, function_list=[]):
 def var(x):
     return np.var(x, axis=0).reshape((-1, 1))
 def mean(x):
-    return np.mean(x, axis=0).rehape((-1, 1))
+    return np.mean(x, axis=0).reshape((-1, 1))
 def std(x):
     return np.std(x, axis=0).reshape((-1, 1))
 def skew(data):
@@ -111,17 +114,17 @@ def ssc(x):
     return np.sum(a, axis=0).reshape((-1, 1))
 
 # auto-regressive (AR) model coefficients
-def AR_coef(data, order):
+def AR_coef(data, order=4):
     # input: (times, channels)
     # output: (channels, order+1)
-    K = np.floor(data.shape[0]/(order+1))
+    K = int(np.floor(data.shape[0]/(order+1)))
     ar_coef = np.zeros((data.shape[1], order+1))
     for i in range(data.shape[1]):
         x = data[:int(K*(order+1)), i].reshape((K, order+1))
         reg = LinearRegression().fit(x[:, :-1], x[:, -1])
         ar_coef[i, :-1] = reg.coef_
         ar_coef[i, -1] = reg.intercept_
-    return 0
+    return ar_coef
 
 
 #%% ----------Self similarity features----------
@@ -130,7 +133,7 @@ def he(data, K=20):
     hm = np.zeros((data.shape[1],))
     # data is decomposed in K subparts of length k with the total number of subparts K = N/k
     N = data.shape[0]
-    k = np.floor(N/K)
+    k = int(np.floor(N/K))
     for i in range(data.shape[1]):
         x = data[:int(k*K), i].reshape((K, k))
         hm[i] = np.abs(x.mean(axis=1) - np.mean(data[:int(k*K), i])).mean()
@@ -247,8 +250,8 @@ def mfcc_feature_mean_std(data, para_dict):
     for i in range(data.shape[1]):
         x = librosa.feature.mfcc(y=data[0, 1:] - pre_em * data[0, :-1], \
             sr=sr, n_mfcc=n_mfcc, lifter=lifter, n_fft=n_fft, hop_length=hop_length, fmin=fmin, fmax=fmax)
-        mfcc[i, 0] = x.mean(axis=1)
-        mfcc[i, 1] = x.std(axis=1)
+        mfcc[i, :n_mfcc] = x.mean(axis=1)
+        mfcc[i, n_mfcc:] = x.std(axis=1)
 
     return mfcc
 
