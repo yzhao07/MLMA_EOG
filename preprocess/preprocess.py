@@ -7,11 +7,13 @@ Original file is located at
     https://colab.research.google.com/drive/1_HGxPyUOCJ3wnMfPbXl7sqWSz-jsCMGe
 """
 
+# input: data (type: numpy array)(shape: (time, 2))
+# output: data (type: numpy array)(shape: (100, 2))
 import numpy as np
-import csv
-import matplotlib.pyplot as plt
+from scipy import signal
 
 def preprocess(data):
+  # Delete silent part
   data = data.astype(np.float)
   n_size = 50
   n_len = int(data.shape[0]/n_size)
@@ -26,5 +28,9 @@ def preprocess(data):
   pass_idx_y = np.where(std_data[:,1] >= pass_threshold)[0]
   start_idx = min(pass_idx_x[0], pass_idx_y[0]) - 1
   end_idx = max(pass_idx_x[-1], pass_idx_y[-1]) + 1
-  return data[start_idx*n_len:end_idx*n_len, :]
-
+  
+  # resample to 100 data points
+  data = signal.resample(data[start_idx*n_len:end_idx*n_len, :], 100, axis=0)
+  # scale
+  data = (data - data.min(axis=0, keepdim=True))/(data.max(axis=0, keepdim=True) - data.min(axis=0, keepdim=True))
+  return data
