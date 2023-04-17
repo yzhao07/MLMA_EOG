@@ -32,5 +32,5 @@ def preprocess(data):
   # resample to 100 data points
   data = signal.resample(data[start_idx*n_len:end_idx*n_len, :], 100, axis=0)
   # scale
-  data = (data - data.min(axis=0, keepdim=True))/(data.max(axis=0, keepdim=True) - data.min(axis=0, keepdim=True))
+  data = (data - data.min(axis=0, keepdims=True))/(data.max(axis=0, keepdims=True) - data.min(axis=0, keepdims=True))
   return data
