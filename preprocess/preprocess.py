@@ -14,7 +14,7 @@ from scipy import signal
 
 def preprocess(data):
   # Delete silent part
-  data = data.astype(np.float)
+  data = data.astype(float)
   n_size = 50
   n_len = int(data.shape[0]/n_size)
   std_data = np.zeros((n_size, 2))
@@ -23,11 +23,18 @@ def preprocess(data):
     seg_data_y = data[i*n_len:i*n_len+n_len, 1]
     std_data[i, 0] = np.std(seg_data_x)
     std_data[i, 1] = np.std(seg_data_y)
-  pass_threshold = 5
+  pass_threshold = 1
   pass_idx_x = np.where(std_data[:,0] >= pass_threshold)[0]
   pass_idx_y = np.where(std_data[:,1] >= pass_threshold)[0]
-  start_idx = min(pass_idx_x[0], pass_idx_y[0]) - 1
-  end_idx = max(pass_idx_x[-1], pass_idx_y[-1]) + 1
+  if len(pass_idx_x) == 0:
+    start_idx = max(0, pass_idx_y[0] - 1)
+    end_idx = min(data.shape[0],pass_idx_y[-1] + 1)
+  elif len(pass_idx_y) == 0:
+    start_idx = max(0, pass_idx_x[0] - 1)
+    end_idx = min(data.shape[0],pass_idx_x[-1] + 1)
+  else:
+    start_idx = max(0,min(pass_idx_x[0], pass_idx_y[0]) - 1)
+    end_idx = min(data.shape[0],max(pass_idx_x[-1], pass_idx_y[-1]) + 1)
   
   # resample to 100 data points
   data = signal.resample(data[start_idx*n_len:end_idx*n_len, :], 100, axis=0)
