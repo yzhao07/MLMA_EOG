@@ -1,13 +1,16 @@
 import numpy as np
 from scipy import signal
 
+# cut different window lengths with the same number of windows, and predict probability
+
 # input: 
-# data(type:numpy array)(shape:time * 2)
+# data(type:numpy array)(shape:1024 * 2)
 # model(sklearn model or pytorch model)
 # flatten(type: bool)(whether to flatten the input as 200 or use 100*2 as the model input)
+# model_type(type: int): decide how to predict probability(mostly because of the difference of sklearn and pytorch)
 
 # output: 
-# probanility_map(number of split, 12)
+# probanility_map(16, 12*3)
 def stroke_probability_map_1(data, model, flatten, model_type):
     split_list = [125, 200, 400]
     probability_map = np.zeros((16, 12*len(split_list)))
