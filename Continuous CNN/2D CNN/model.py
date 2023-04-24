@@ -11,7 +11,7 @@ class Model_name(nn.Module):
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.MaxPool2d(4),
-            nn.BatchNorm1d(16,momentum=0.99), 
+            nn.BatchNorm2d(16,momentum=0.99), 
         )
 
         self.layer2 = nn.Sequential(
@@ -19,7 +19,7 @@ class Model_name(nn.Module):
             nn.ReLU(),
             nn.Dropout(p=0.5),
             nn.MaxPool2d(4),
-            nn.BatchNorm1d(16,momentum=0.99), 
+            nn.BatchNorm2d(16,momentum=0.99), 
             nn.Flatten()
         )
         self.classifier2 = nn.Sequential(

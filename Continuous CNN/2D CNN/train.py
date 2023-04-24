@@ -9,10 +9,11 @@ import torch.nn as nn
 import torch
 import os
 import pandas as pd
+import pickle
 from sklearn.metrics import accuracy_score,f1_score,confusion_matrix,roc_auc_score,precision_score,recall_score
 
 # stroke probability map
-def stroke_probability_map_1(data, model, flatten, model_type):
+def stroke_probability_map_1(data, model):
     split_list = [125, 200, 400]
     probability_map = np.zeros((16, 12*len(split_list)))
     N = data.shape[0]
@@ -24,13 +25,8 @@ def stroke_probability_map_1(data, model, flatten, model_type):
         for s_idx in range(segments):
             data_cur[s_idx] = data[(s_idx*step):(s_idx*step+split_list[split_idx]),:]
         data_cur = signal.resample(data_cur, 100, axis=1)
-        if flatten:
-            data_cur = data_cur.reshape((segments, -1))
-
-        if model_type == 0:
-            probability_map[:, (split_idx*12):(split_idx*12+12)] = model.predict_proba(data_cur)
-        else:
-            probability_map[:, (split_idx*12):(split_idx*12+12)] = model(data_cur)
+        data_cur = data_cur.reshape((segments, -1))
+        probability_map[:, (split_idx*12):(split_idx*12+12)] = model.predict_proba(data_cur)
             
     return probability_map
 
@@ -53,6 +49,10 @@ def split_data(test_split,val_split):
         for p in patient:
             if i.endswith("cvs"):
                 data = np.array(pd.read_csv(str("/data/achar15/MLMA/continuous/"+p+"/training/"+i),names=["vertical","horizontal"]))
+                data = signal.resample(data, 1024, axis=1)
+                with open(str("../../Isolated_model/SVC__sub"+p+".pck"), "rb") as input_file:
+                    model = pickle.load(input_file)
+                data = stroke_probability_map_1(data, model)
                 if i.split("_")[2] == test_split:
                     test_stroke.append(data)
                 elif i.split("_")[2] == val_split:
